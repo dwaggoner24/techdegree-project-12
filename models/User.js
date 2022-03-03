@@ -58,19 +58,20 @@ module.exports = (sequelize) => {
                 len: {
                     args: [8, 20], 
                     msg: 'The password should be between 8 and 20 characters in length'
-                }
-            }, 
-            set(val) {
-                if (val === this.password) {
-                    const hashedPassword = bcrypt.hashSync(val, 10);
-                    this.setDataValue('password', hashedPassword);
+                }, 
+                set(val) {
+                    if (val === this.password) {
+                        const hashedPassword = bcrypt.hashSync(val, 10);
+                        this.setDataValue('password', hashedPassword);
+                    }
                 }
             }
+
         }, 
        
     }, {sequelize});
 
-    User.assocate = (models) => {
+    User.associate = (models) => {
         User.hasMany(models.Course, {
             foreignKey: {
                 fieldName: 'userId', 
