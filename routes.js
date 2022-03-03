@@ -22,7 +22,7 @@ function asyncHandler(cb){
 
 //User Routes//
 //Route that will GET all properties and values from current user with 200 status code
-router.get('/users', authenticateUser, asyncHandler(async(req, res) => {
+router.get('/users', authenticateUser, asyncHandler(async (req, res) => {
     const user = req.currentUser;
     res.status(200).json({  //resource - workshop
         firstName: user.firstName,
@@ -77,7 +77,7 @@ router.get('/courses/:id', asyncHandler(async (req, res) => {
 router.post('/courses', authenticateUser, asyncHandler(async (req, res) => {
     try {
         const course = await Course.create(req.body);
-        res.status(201).setHeader(`/courses/${course.id}`).end();
+        res.location(`/courses/${course.id}`).status(201).end();
     } catch (error) {
         if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
             const errors = error.errors.map(err => err.message);
