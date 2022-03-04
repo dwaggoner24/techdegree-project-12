@@ -51,10 +51,12 @@ router.post('/users', asyncHandler(async (req, res) => {
 //Route that will GET all courses with associated user and 200 status code
 router.get('/courses', asyncHandler(async(req, res) => {
     const courses = await Course.findAll({      //API reference website
+        attributes: {exclude: ['createdAt', 'updatedAt']}, //SlackOverFlow
+        
         include: [{
             model: User,
             attributes: ['firstName', 'lastName', 'emailAddress'] 
-            }]
+            }] 
     });
     if (courses) {
         res.status(200).json(courses);
@@ -63,9 +65,12 @@ router.get('/courses', asyncHandler(async(req, res) => {
     }
     
 }));
+
 //Route that will GET corresponding course with associated user and 200 status code
 router.get('/courses/:id', asyncHandler(async (req, res) => {
     const course = await Course.findByPk(req.params.id, {
+        attributes: {exclude: ['createdAt', 'updatedAt']}, //SlackOverFlow
+        
         include: [{
             model: User, 
             attributes: ['firstName', 'lastName', 'emailAddress']
@@ -73,6 +78,7 @@ router.get('/courses/:id', asyncHandler(async (req, res) => {
     });
     res.status(200).json(course);
 }));
+
 //Route that will POST or create new course, loaction header in URL, and 201 status code
 router.post('/courses', authenticateUser, asyncHandler(async (req, res) => {
     try {
@@ -87,6 +93,7 @@ router.post('/courses', authenticateUser, asyncHandler(async (req, res) => {
             }
     }
 }));
+
 //Route that will PUT or update course and return 204 status code
 router.put('/courses/:id', authenticateUser, asyncHandler(async (req, res) => { 
     try{
