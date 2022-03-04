@@ -96,7 +96,7 @@ router.put('/courses/:id', authenticateUser, asyncHandler(async (req, res) => {
                 await course.update(req.body);
                 res.status(204).end();
             } else {
-                res.status(404).json({message: 'Users can only make changes if they created the course'});
+                res.status(403).json({message: 'Users can only make changes if they created the course'});
             }
         }
     } catch(error) {
@@ -113,8 +113,14 @@ router.put('/courses/:id', authenticateUser, asyncHandler(async (req, res) => {
 router.delete('/courses/:id', authenticateUser, asyncHandler(async (req, res) => {
     try {
         const course = await Course.findByPk(req.params.id);
-        await course.destroy(course);
-        res.status(204).end();
+        if (course) {
+            if (course.userID === req.currentUser.id) {
+                await course.destroy(course);
+                res.status(204).end();
+            } else {
+                res.status(403).json({message: 'Users can only make changes if they created the course'});
+            }
+        }
     } catch(err){
         res.status(500).json({err})
     }
